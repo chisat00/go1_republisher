@@ -128,6 +128,8 @@ int main(int argc, char **argv)
 		for (int i = 0; i < NUM_LEG; ++i){
 		        msg_leg.effort[NUM_DOF + i] = custom.high_state.footForceEst[i];
 		}
+		pub_leg.publish(msg_leg);
+		
 		//first, we'll publish the transform over tf
 		geometry_msgs::TransformStamped odom_trans;
 		odom_trans.header.stamp = current_time;
