@@ -1,5 +1,6 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Imu.h>
+#include <sensor_msgs/JointState.h>
 #include <nav_msgs/Odometry.h>
 #include <tf/transform_broadcaster.h>
 #include "unitree_legged_sdk/unitree_legged_sdk.h"
@@ -41,6 +42,7 @@ class Custom
 Custom custom;
 ros::Publisher pub_imu;
 ros::Publisher pub_odom;
+ros::Publisher pub_leg;
 
 long high_count = 0;
 
@@ -50,6 +52,7 @@ int main(int argc, char **argv)
 	ros::NodeHandle nh;
 	pub_imu = nh.advertise<sensor_msgs::Imu>("imu", 1);
 	pub_odom = nh.advertise<nav_msgs::Odometry>("odom", 1);
+	pub_leg = nh.advertise<sensor_msgs::JointState>("leg",1);
 	tf::TransformBroadcaster odom_broadcaster;
 
 	LoopFunc loop_udpSend("high_udp_send", 0.002, 3, boost::bind(&Custom::highUdpSend, &custom));
@@ -111,6 +114,20 @@ int main(int argc, char **argv)
 
 		pub_odom.publish(msg_odom);
 
+		sensor_msgs::JointState msg_leg;
+		int NUM_DOF = 12;
+		int NUM_LEG = 4;
+		joint_state.name.resize(NUM_DOF + NUM_LEG);
+   		joint_state.position.resize(NUM_DOF + NUM_LEG, 0.0);  // Initialize all positions to 0.0
+    		joint_state.velocity.resize(NUM_DOF + NUM_LEG, 0.0);  // Initialize all velocities to 0.0
+    		joint_state.effort.resize(NUM_DOF + NUM_LEG, 0.0);    // Initialize all efforts to 0.0
+		for (int i = 0; i < NUM_DOF; ++i){
+			msg_leg.position[i] = custom.high_state.motorState[i].q;
+		        msg_leg.velocity[i] = custom.high_state.motorState[i].dq;
+		}
+		for (int i = 0; i < NUM_LEG; ++i){
+		        msg_leg.effort[NUM_DOF + i] = custom.high_state.footForceEst[i];
+		}
 		//first, we'll publish the transform over tf
 		geometry_msgs::TransformStamped odom_trans;
 		odom_trans.header.stamp = current_time;
