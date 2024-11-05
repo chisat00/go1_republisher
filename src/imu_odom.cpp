@@ -1,5 +1,6 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Imu.h>
+#include <sensor_msgs/JointState.h>
 #include <nav_msgs/Odometry.h>
 #include <tf/transform_broadcaster.h>
 #include "unitree_legged_sdk/unitree_legged_sdk.h"
@@ -50,6 +51,7 @@ int main(int argc, char **argv)
 	ros::NodeHandle nh;
 	pub_imu = nh.advertise<sensor_msgs::Imu>("imu", 1);
 	pub_odom = nh.advertise<nav_msgs::Odometry>("odom", 1);
+	pub_leg = nh.advertise<>
 	tf::TransformBroadcaster odom_broadcaster;
 
 	LoopFunc loop_udpSend("high_udp_send", 0.002, 3, boost::bind(&Custom::highUdpSend, &custom));
