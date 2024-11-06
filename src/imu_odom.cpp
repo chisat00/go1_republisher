@@ -117,10 +117,10 @@ int main(int argc, char **argv)
 		sensor_msgs::JointState msg_leg;
 		int NUM_DOF = 12;
 		int NUM_LEG = 4;
-		joint_state.name.resize(NUM_DOF + NUM_LEG);
-   		joint_state.position.resize(NUM_DOF + NUM_LEG, 0.0);  // Initialize all positions to 0.0
-    		joint_state.velocity.resize(NUM_DOF + NUM_LEG, 0.0);  // Initialize all velocities to 0.0
-    		joint_state.effort.resize(NUM_DOF + NUM_LEG, 0.0);    // Initialize all efforts to 0.0
+		msg_leg.name.resize(NUM_DOF + NUM_LEG);
+   		msg_leg.position.resize(NUM_DOF + NUM_LEG, 0.0);  // Initialize all positions to 0.0
+    		msg_leg.velocity.resize(NUM_DOF + NUM_LEG, 0.0);  // Initialize all velocities to 0.0
+    		msg_leg.effort.resize(NUM_DOF + NUM_LEG, 0.0);    // Initialize all efforts to 0.0
 		for (int i = 0; i < NUM_DOF; ++i){
 			msg_leg.position[i] = custom.high_state.motorState[i].q;
 		        msg_leg.velocity[i] = custom.high_state.motorState[i].dq;
